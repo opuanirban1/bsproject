@@ -1,0 +1,15 @@
+SELECT b.id as id, g.total_salary as total_salary, b.currentbalance as currentbalance FROM employee e, bankaccount b , gradewisesalary g 
+WHERE e.salary_id= g.id AND e.bankaccount=b.accountnumber AND b.accounttype = 'savings_current' ORDER BY b.id ASC;
+
+
+
+
+                   e.name,
+                   e.address ,
+                   e.mobileno ,
+                   e.bankaccount,
+                   s.company_grade,
+                   s.basic_salary ,
+                   s.medical_allowence,
+                   s.house_rent,
+                   s.total_salary

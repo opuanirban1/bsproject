@@ -20,6 +20,57 @@
 <div class="container my-5">
     <h1>BrainStation 23 Examination</h1>
     <div th:replace="/includes/headermenu :: headermenu"> </div>
+
+    <div class="card">
+        <div class="card-body">
+            <b><p th:text="${message}"></p></b>
+            <div th:switch="${allinfo}" class="container my-5">
+                <p class="my-5">
+                    Employee Full Information Report
+                </p>
+                <div class="col-md-10">
+                    <h2 th:case="null">No Record found</h2>
+                    <div th:case="*">
+                        <table class="table table-striped table-responsive-md">
+                            <thead>
+                            <tr>
+
+                                <th>Name</th>
+                                <th>Phone No</th>
+                                <th>Address</th>
+                                <th>Company Grade</th>
+                                <th>Basic Salary</th>
+                                <th>House Rent</th>
+                                <th>Medical Allowence</th>
+                                <th>Total Salary</th>
+                                <th>Bank Account</th>
+                                <th>Current Balance</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                                 
+                                 <tr th:each="data : ${allinfo}">
+                                <td th:text="${data.name}"></td>
+                                <td th:text="${data.mobileno}"></td>
+                                <td th:text="${data.address}"></td>
+                                <td th:text="${data.company_grade}"></td>
+                                <td th:text="${data.basic_salary}"></td>
+                                <td th:text="${data.house_rent}"></td>
+                                <td th:text="${data.medical_allowence}"></td>
+                                <td th:text="${data.total_salary}"></td>
+                                <td th:text="${data.bankaccount}"></td>
+                                <td th:text="${data.currentbalance}"></td>
+                                
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 

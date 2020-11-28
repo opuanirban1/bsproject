@@ -1,6 +1,7 @@
 package com.robi.dev.dao;
 
 
+import com.robi.dev.dto.EmployeeSalaryDTO;
 import com.robi.dev.model.Employee;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /*
  *Auhtor : Anirban Das
@@ -50,5 +53,17 @@ public interface EmployeeDao extends CrudRepository <Employee, Long>{
     void insertEmployee (String name,String address, String mobileno,String bankaccount, int salary_id);
 
 
-
+   // @Query (value="SELECT  new com.robi.dev.dto.EmployeeSalaryDTO(e.name, s.total_salary) FROM Employee e JOIN Gradewisesalary s  ON e.salary_id = s.id")
+   @Query (value="SELECT  new com.robi.dev.dto.EmployeeSalaryDTO(" +
+           "e.name, " +
+           "e.address,"+
+           "e.mobileno ,"+
+           "e.bankaccount,"+
+           "s.company_grade,"+
+           "s.basic_salary ,"+
+            "s.medical_allowence,"+
+            "s.house_rent,"+
+            "s.total_salary, b.id, b.currentbalance) FROM Employee e, Gradewisesalary s, Bankaccount b  WHERE e.salary_id = s.id " +
+           "AND e.bankaccount=b.accountnumber AND b.accounttype = 'savings_current'  ORDER BY e.id")
+   List<EmployeeSalaryDTO> getEmployeeSarayDTOAll();
 }

@@ -3,6 +3,7 @@ package com.robi.dev.controller;
 import com.robi.dev.dao.BankaccountDao;
 import com.robi.dev.dao.GradewiseSalaryDao;
 import com.robi.dev.dao.EmployeeDao;
+import com.robi.dev.dto.EmployeeSalaryDTO;
 import com.robi.dev.model.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.Entity;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.awt.image.AreaAveragingScaleFilter;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +44,23 @@ public class MainController {
     }
 
     @RequestMapping(value="/", method = RequestMethod.GET)
-    public String home()
+    public String home(ModelMap model)
     {
+
+        List<EmployeeSalaryDTO> empsaldto = new ArrayList<>();
+        empsaldto = employeeDao.getEmployeeSarayDTOAll();
+        String message = "";
+        if (empsaldto.size()>0){
+
+            for(int cnt =0 ; cnt <empsaldto.size(); cnt++){
+                System.out.println("Name :"+empsaldto.get(cnt).getName()+" Total salary:"
+                        +empsaldto.get(cnt).getTotal_salary()+" Id:"+empsaldto.get(cnt).getId()
+                       +" Current balance:"+empsaldto.get(cnt).getCurrentbalance());
+            }
+        }
+        message = "Total paid salary is :"+gradewiseSalaryDao.getTotalSalaryAmount()+" Remaining Main/Company account value is :"+bankaccountDao.getCurBalanceMAcc();
+        model.addAttribute("message", message);
+        model.addAttribute("allinfo", empsaldto);
 
         return "ussd-show";
 
@@ -194,7 +203,7 @@ public class MainController {
 
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @RequestMapping(value="/salarytransdo", method = RequestMethod.POST)
     public String dosalaraytrans(ModelMap model,
                                  @Valid  Bankaccount bacc, BindingResult result)
@@ -252,7 +261,7 @@ public class MainController {
 
             }
 
-            message = "Total paid salary is :"+totaltransalary+" Remaining Main account is :"+fmaccvalueaftertrans;
+            message = "Total paid salary is :"+totaltransalary+" Remaining Main/Company account value is :"+fmaccvalueaftertrans;
             model.addAttribute("message",message);
             return "salarytransfersuccess";
         }

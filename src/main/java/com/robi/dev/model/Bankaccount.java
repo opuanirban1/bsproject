@@ -44,7 +44,7 @@ public class Bankaccount {
     @Column(nullable=true, name="accountnumber")
     private String accountnumber;
 
-    @Min(value=1, message = "Valid payment amount requerd.")
+    @Min(value=1, message = "Valid payment amount required.")
     @Column(/*nullable=true,*/ name="currentbalance")
     private double currentbalance ;
 
