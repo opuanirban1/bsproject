@@ -58,7 +58,7 @@ public class MainController {
                        +" Current balance:"+empsaldto.get(cnt).getCurrentbalance());
             }
         }
-        message = "Total paid salary is :"+gradewiseSalaryDao.getTotalSalaryAmount()+" Remaining Main/Company account value is :"+bankaccountDao.getCurBalanceMAcc();
+        message = "Total paid salary is :"+employeeDao.getTotalSalaryAmount()+" Remaining Main/Company account value is :"+bankaccountDao.getCurBalanceMAcc();
         model.addAttribute("message", message);
         model.addAttribute("allinfo", empsaldto);
 
@@ -208,8 +208,8 @@ public class MainController {
     public String dosalaraytrans(ModelMap model,
                                  @Valid  Bankaccount bacc, BindingResult result)
     {
-        double maincurbalance=0.0, totalsalary=0.0,reqamount=0.0,ets=0.0,bcb=0.0,
-                adam=0.0,totaltransalary=0.0, fmaccvalueaftertrans=0.0;
+        double maincurbalance=0.0, totalsalary=0.0,totaltransalary=0.0,reqamount=0.0,ets=0.0,bcb=0.0,
+                adam=0.0, fmaccvalueaftertrans=0.0;
         String message ="";
         int bid=0;
         List<Double> curbal = new ArrayList<Double>();
@@ -218,18 +218,19 @@ public class MainController {
 
 
         maincurbalance = bankaccountDao.getCurBalanceMAcc();
-        totalsalary= gradewiseSalaryDao.getTotalSalaryAmount();
+        totalsalary= employeeDao.getTotalSalaryAmount();
        // model.addAttribute("reqamnt", reqamount);
         if (totalsalary>maincurbalance){
 
             reqamount= (double)(totalsalary-maincurbalance);
             message = "Salary payment failed due to "+reqamount+
-                    " amount issue. Add main account balance from Main Account Payment Mebn";
+                    " amount issue. Add main account balance from Main Account Payment";
             model.addAttribute("message",message);
             return "salarytransferfail";
         }
         else {
 
+            //System.out.println("Anirban Total salary "+totalsalary+" trans salary :"+totaltransalary);
             curbal = bankaccountDao.getAllBankAcountCurBal();
             baid = bankaccountDao.getAllBankAcountID();
             empwts = gradewiseSalaryDao.getAllEmpwiseTotalSalary();
@@ -247,12 +248,13 @@ public class MainController {
                     System.out.println ("ID "+bid+" Total Salary "+ets
                             +" Current Balance "+bcb+" value shoud be updated "+adam);
 
-                    totaltransalary = totaltransalary+adam;
 
                     bankaccountDao.updateCurBalanceEmpAcc(adam, bid);
+                    totaltransalary = totaltransalary+ets;
 
                 }
 
+                //System.out.println ("Anirban Total transfer amount "+totaltransalary);
                 fmaccvalueaftertrans = bnkbrule.removeAmountinCurBalance(totaltransalary,maincurbalance);
                 System.out.println ("Total tranfered amount "+totaltransalary+ "cur man account balance "+maincurbalance
                 +"value will be updated"+fmaccvalueaftertrans);
@@ -261,7 +263,7 @@ public class MainController {
 
             }
 
-            message = "Total paid salary is :"+totaltransalary+" Remaining Main/Company account value is :"+fmaccvalueaftertrans;
+            message = "Total paid salary is :"+totalsalary+" Remaining Main/Company account value is :"+fmaccvalueaftertrans;
             model.addAttribute("message",message);
             return "salarytransfersuccess";
         }

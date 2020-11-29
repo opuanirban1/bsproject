@@ -66,4 +66,8 @@ public interface EmployeeDao extends CrudRepository <Employee, Long>{
             "s.total_salary, b.id, b.currentbalance) FROM Employee e, Gradewisesalary s, Bankaccount b  WHERE e.salary_id = s.id " +
            "AND e.bankaccount=b.accountnumber AND b.accounttype = 'savings_current'  ORDER BY e.id")
    List<EmployeeSalaryDTO> getEmployeeSarayDTOAll();
+
+    @Transactional
+    @Query(value = "SELECT sum(s.total_salary) as total_salary FROM employee e , gradewisesalary s  WHERE e.salary_id=s.id", nativeQuery = true)
+    Double getTotalSalaryAmount();
 }

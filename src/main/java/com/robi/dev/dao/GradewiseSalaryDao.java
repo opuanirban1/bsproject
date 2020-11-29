@@ -30,9 +30,7 @@ public interface GradewiseSalaryDao extends CrudRepository <Gradewisesalary, Lon
                              double medical_allowence, double total_salary, Integer id);*/
     void updateIDwiseSalary (double basicsalary, double house_rent, double medical_allowence, double total_salary, Integer id);
 
-    @Transactional
-    @Query(value = "SELECT sum(total_salary) as total_salary FROM gradewisesalary", nativeQuery = true)
-    Double getTotalSalaryAmount();
+
 
     @Transactional
     @Query(value="SELECT   g.total_salary as total_salary FROM employee e, bankaccount b , gradewisesalary g \n" +
